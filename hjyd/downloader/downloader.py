@@ -12,26 +12,23 @@ from bs4 import BeautifulSoup
 url = "http://apply.bjhjyd.gov.cn/apply/validCodeImage.html"
 downloader_dir = os.path.dirname(os.path.abspath(__file__))
 captchas_dir = os.path.join(downloader_dir, 'captchas')
-for i in range(100):
-    try:
-        resp = requests.get(url)
-        # bsObj = BeautifulSoup(resp.content, "html.parser")
-        # print(resp.content.decode('gbk', errors='ignore'))
-        # image_url = str(bsObj.img['src'])
-        # resp = requests.get(image_url)
-        filename = str(uuid.uuid4()) + ".png"
-        filepath = os.path.join(captchas_dir, filename)
-        #print(filepath, image_url)
-        with open(filepath, 'wb') as f:
-           f.write(resp.content)
 
-        # try:
-        #     with Image.open(os.path.join(captchas_dir, filename)) as im:
-        #         im.save(filepath.split('.gif')[0] + ".png")
+def download(number):
+    files = []
+    for i in range(number):
+        try:
+            resp = requests.get(url)
+            filename = str(uuid.uuid4()) + ".png"
+            filepath = os.path.join(captchas_dir, filename)
+            with open(filepath, 'wb') as f:
+               f.write(resp.content)
 
-        # except Exception as ex:
-        #     print(Exception, ":", ex)
-        print(filename)
-    except Exception as ex:
-        raise
-        #print(Exception, ":", ex)
+            print(filename)
+            files.append(filename)
+        except Exception as ex:
+            raise
+            print(Exception, ":", ex)
+    return files
+
+if __name__ == "__main__":
+    download(10)

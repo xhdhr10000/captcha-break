@@ -8,13 +8,13 @@ import numpy as np
 
 candidates = ['3', '4', '5', '6', '7', '8', 'A', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'Q', 'R', 'T', 'U', 'W', 'X']
 
-def load_templates():
+def load_templates(dir=os.path.join('.', 'templates')):
     """ load the letter template from ./templates """
     templates = []
     for i in range(24):
         template = [];
         for j in range(4):
-            image_path = os.path.join(".", "templates", "%s" % candidates[i], "%s%d.png" % (candidates[i], j))
+            image_path = os.path.join(dir, "%s" % candidates[i], "%s%d.png" % (candidates[i], j))
             template.append(Image.open(image_path).convert("L"))
         templates.append(template)
     return templates
@@ -22,7 +22,7 @@ def load_templates():
 
 def create_captcha(templates):
 
-    captcha = Image.new('RGBA', (96, 30), (255, 255, 255, 0))
+    captcha = Image.new('RGBA', (96, 30), (0, 0, 0, 255))
     captcha_str = ""
     for i in range(4):
         temp_index = random.randint(0, 23)

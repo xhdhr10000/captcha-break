@@ -15,7 +15,7 @@ def vec2str(vec):
     _str = ""
     for i in range(4):
         v = vec[i*43: (i+1)*43]
-        _str += str(np.argwhere(v == 1)[0][0])
+        _str += chr(np.argwhere(v == 1)[0][0] + ord('0'))
     return _str
 
 

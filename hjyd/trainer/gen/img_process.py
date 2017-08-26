@@ -43,20 +43,23 @@ def cut(img):
 
     return Image.fromarray(np.uint8(img_arr[row[0]: row[1], col[0]: col[1]]))
 
-
-def rotate_and_cut(im, degree):
-    im = rotate(im, degree)
-    im = cut(im)
-
+def grey_to_binary(im):
     im = im.convert("RGBA")
     datas = im.getdata()
     newData = list()
     for item in datas:
         if item[0] < 128 and item[1] < 128 and item[2] < 128:
-            newData.append((255, 255, 255, 0))
+            newData.append((255, 255, 255, 255))
         else:
             newData.append((0, 0, 0, 255))
 
     im.putdata(newData)
+    return im
+
+def rotate_and_cut(im, degree):
+    im = rotate(im, degree)
+    im = cut(im)
+
+    im = grey_to_binary(im)
     return im
 
