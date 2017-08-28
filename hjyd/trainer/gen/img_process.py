@@ -17,29 +17,29 @@ def cut(img):
     row = [0, 0]  # the cut row range
     col = [0, 0]  # the cut column range
     # search for row
-    for y in range(img_arr.shape[1]):
-        count = 0
-        for x in range(img_arr.shape[0]):
-            if img_arr[x, y] == 255:
-                count += 1
-
-        if count != img_arr.shape[0]:
-            if row[0] == 0:
-                row[0] = y
-            else:
-                row[1] = y+1
-
-    # search for column
     for x in range(img_arr.shape[0]):
         count = 0
         for y in range(img_arr.shape[1]):
             if img_arr[x, y] == 255:
                 count += 1
+
         if count != img_arr.shape[1]:
-            if col[0] == 0:
-                col[0] = x
+            if row[0] == 0:
+                row[0] = x
             else:
-                col[1] = x+1
+                row[1] = x+1
+
+    # search for column
+    for y in range(img_arr.shape[1]):
+        count = 0
+        for x in range(img_arr.shape[0]):
+            if img_arr[x, y] == 255:
+                count += 1
+        if count != img_arr.shape[0]:
+            if col[0] == 0:
+                col[0] = y
+            else:
+                col[1] = y+1
 
     return Image.fromarray(np.uint8(img_arr[row[0]: row[1], col[0]: col[1]]))
 

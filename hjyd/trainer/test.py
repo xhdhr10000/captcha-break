@@ -5,3 +5,4 @@ import tensorflow as tf
 templates = load_templates()
 c,cs = create_captcha(templates)
 print(cs)
+c.show()

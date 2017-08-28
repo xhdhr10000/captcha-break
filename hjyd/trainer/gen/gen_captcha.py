@@ -29,11 +29,11 @@ def create_captcha(templates):
         index = random.randint(0, 3)
         captcha_str += candidates[temp_index]
         template = templates[temp_index][index]
-        template = rotate_and_cut(template, random.randint(-20, 20))
+        template = rotate_and_cut(template, 0)
         width_range = math.fabs(24 - template.size[0])
         height_range = math.fabs(30 - template.size[1])
 
-        start_x_pos = i * 24 + random.randint(-width_range, width_range)
+        start_x_pos = i * 24 + random.randint(0, width_range)
         start_y_pos = random.randint(0, height_range)
 
         captcha.paste(template, (start_x_pos, start_y_pos), mask=template)
