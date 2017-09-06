@@ -1,6 +1,6 @@
 from PIL import Image
 import os
-from img_process import rotate_and_cut
+from img_process import grey_to_binary, distortion
 import random
 import math
 from utils import str2vec
@@ -22,21 +22,29 @@ def load_templates(dir=os.path.join('.', 'templates')):
 
 def create_captcha(templates):
 
+    temp_index = []
+    index = []
+    width = 0
+    height = 0
+    for i in range(4):
+        temp_index.append(random.randint(0, 23))
+        index.append(random.randint(0, 3))
+        template = templates[temp_index[i]][index[i]]
+        width += template.size[0]
+        if template.size[1] > height:
+            height = template.size[1]
     captcha = Image.new('RGBA', (96, 30), (0, 0, 0, 255))
     captcha_str = ""
+    start_x = (96 - width) / 2
     for i in range(4):
-        temp_index = random.randint(0, 23)
-        index = random.randint(0, 3)
-        captcha_str += candidates[temp_index]
-        template = templates[temp_index][index]
-        template = rotate_and_cut(template, 0)
-        width_range = math.fabs(24 - template.size[0])
-        height_range = math.fabs(30 - template.size[1])
+        template = templates[temp_index[i]][index[i]]
+        template = grey_to_binary(template)
+        start_y = (30 - template.size[1]) / 2
+        captcha.paste(template, (start_x, start_y), mask=template)
+        start_x += template.size[0]
+        captcha_str += candidates[temp_index[i]]
 
-        start_x_pos = i * 24 + random.randint(0, width_range)
-        start_y_pos = random.randint(0, height_range)
-
-        captcha.paste(template, (start_x_pos, start_y_pos), mask=template)
+    captcha = distortion(captcha, (96-width)/2, (30-height)/2)
     return captcha, captcha_str
 
 

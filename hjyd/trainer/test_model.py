@@ -10,6 +10,7 @@ from gen.utils import vec2str
 import numpy as np
 from PIL import Image
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 trainer_dir = os.path.dirname(os.path.abspath(__file__))
 home_dir = os.path.dirname(trainer_dir)
 graph_log_dir = os.path.join(trainer_dir, 'logs')
@@ -44,7 +45,7 @@ def test_model():
         for i in range(4):
             string += chr(label[i] + ord('0'))
         print("predict label:", string)
-        show_im(dataset)
+        # show_im(dataset)
         print("actual label:", vec2str(labels[0]))
 
 

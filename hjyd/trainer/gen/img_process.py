@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import random
 
 
 def rotate(img, angle):
@@ -56,10 +57,28 @@ def grey_to_binary(im):
     im.putdata(newData)
     return im
 
+def distortion(im, w, h):
+    img_arr = np.array(np.asarray(im))
+
+    a,b = random.random() * 2 * np.pi, random.random() * 2 * np.pi
+    for y in range(img_arr.shape[1]):
+        cur = int(np.sin(min(a,b) + (y+1)/float(img_arr.shape[1])*abs(a-b)) * 5)
+        cur = min(cur, h)
+        cur = max(cur, -h)
+        img_arr[:,y] = np.roll(img_arr[:,y], cur, axis=0)
+
+    a,b = random.random() * 2 * np.pi - np.pi, random.random() * 2 * np.pi - np.pi
+    for x in range(img_arr.shape[0]):
+        cur = int(np.sin(min(a,b) + (x+1)/float(img_arr.shape[0])*abs(a-b)) * 5)
+        cur = min(cur, w)
+        cur = max(cur, -w)
+        img_arr[x,:] = np.roll(img_arr[x,:], cur, axis=0)
+    ret = Image.fromarray(np.uint8(img_arr))
+    return ret
+
 def rotate_and_cut(im, degree):
     im = rotate(im, degree)
     im = cut(im)
-
     im = grey_to_binary(im)
     return im
 

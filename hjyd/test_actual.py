@@ -26,7 +26,7 @@ def show_im(dataset):
     im.show()
 
 def test_model(captcha):
-    im = Image.open(os.path.join(basedir, 'public', 'captchas', captcha))
+    im = Image.open(os.path.join(basedir, 'downloader', 'captchas', captcha))
     im = im.convert('L')
     im = grey_to_binary(im)
     # im.show()
