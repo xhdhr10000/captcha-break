@@ -45,7 +45,7 @@ def test_model():
         for i in range(4):
             string += chr(label[i] + ord('0'))
         print("predict label:", string)
-        # show_im(dataset)
+        show_im(dataset)
         print("actual label:", vec2str(labels[0]))
 
 

@@ -67,14 +67,14 @@ def distortion(im, w, h):
         cur = max(cur, -h)
         img_arr[:,y] = np.roll(img_arr[:,y], cur, axis=0)
 
-    a,b = random.random() * 2 * np.pi - np.pi, random.random() * 2 * np.pi - np.pi
+    a,b = random.random() * 2 * np.pi, random.random() * 2 * np.pi
     for x in range(img_arr.shape[0]):
         cur = int(np.sin(min(a,b) + (x+1)/float(img_arr.shape[0])*abs(a-b)) * 5)
         cur = min(cur, w)
         cur = max(cur, -w)
         img_arr[x,:] = np.roll(img_arr[x,:], cur, axis=0)
-    ret = Image.fromarray(np.uint8(img_arr))
-    return ret
+
+    return Image.fromarray(np.uint8(img_arr))
 
 def rotate_and_cut(im, degree):
     im = rotate(im, degree)

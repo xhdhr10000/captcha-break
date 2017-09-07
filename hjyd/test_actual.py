@@ -28,8 +28,8 @@ def show_im(dataset):
 def test_model(captcha):
     im = Image.open(os.path.join(basedir, 'downloader', 'captchas', captcha))
     im = im.convert('L')
+    im.show()
     im = grey_to_binary(im)
-    # im.show()
     # templates = load_templates(os.path.join('trainer', 'templates'))
 
     model = load_model_nn()
