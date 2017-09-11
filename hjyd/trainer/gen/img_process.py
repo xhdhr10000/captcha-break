@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 import random
+from collections import namedtuple
 
 
 def rotate(img, angle):
@@ -82,3 +83,51 @@ def rotate_and_cut(im, degree):
     im = grey_to_binary(im)
     return im
 
+def has_tranversed_the_point(x, y, tranversed_points):
+    for point in tranversed_points:
+        if x == point.x and y == point.y:
+            return True
+
+    return False
+
+Point = namedtuple('Point', ['x', 'y'])
+def find_connection_area(now_point, image, area, tranversed_points):
+    if now_point.x < 0 or now_point.x >= image.shape[1]\
+            or now_point.y < 0 or now_point.y >= image.shape[0]:
+        return
+
+    if (image[now_point.y][now_point.x] == (0, 0, 0, 255)).all(): return
+
+    if has_tranversed_the_point(now_point.x, now_point.y, tranversed_points):return
+
+    area.append(now_point)
+    tranversed_points.append(now_point)
+
+    find_connection_area(Point(now_point.x, now_point.y-1), image, area, tranversed_points)
+    find_connection_area(Point(now_point.x, now_point.y+1), image, area, tranversed_points)
+    find_connection_area(Point(now_point.x-1, now_point.y), image, area, tranversed_points)
+    find_connection_area(Point(now_point.x+1, now_point.y), image, area, tranversed_points)
+    # find_connection_area(Point(now_point.x-1, now_point.y-1), image, area, tranversed_points)
+    # find_connection_area(Point(now_point.x-1, now_point.y+1), image, area, tranversed_points)
+    # find_connection_area(Point(now_point.x+1, now_point.y-1), image, area, tranversed_points)
+    # find_connection_area(Point(now_point.x+1, now_point.y+1), image, area, tranversed_points)
+
+def clear_paper_noise(im, max_adhesion_count):
+    image = np.asarray(im)
+    image.setflags(write=1)
+    areas = []
+    tranversed_points = []
+    for i in range(image.shape[1]):
+        for j in range(image.shape[0]):
+            if (image[j][i] == (255, 255, 255, 255)).all() and not has_tranversed_the_point(i, j, tranversed_points):
+                area = []
+                find_connection_area(Point(i, j), image, area, tranversed_points)
+                areas.append(area)
+
+    # clean the noises
+    for area in areas:
+        if len(area) <= max_adhesion_count:
+            for point in area:
+                for i in range(3):
+                    image[point.y][point.x][i] = 0
+    return Image.fromarray(np.uint8(image))

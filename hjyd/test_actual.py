@@ -11,7 +11,7 @@ sys.path.append('trainer')
 sys.path.append('downloader')
 
 from gen.gen_captcha import gen_dataset, load_templates, candidates
-from gen.img_process import grey_to_binary
+from gen.img_process import grey_to_binary, clear_paper_noise
 from model.nn import load_model_nn
 from model.common import find_model_ckpt
 import tensorflow as tf
@@ -28,8 +28,9 @@ def show_im(dataset):
 def test_model(captcha):
     im = Image.open(os.path.join(basedir, 'downloader', 'captchas', captcha))
     im = im.convert('L')
-    im.show()
     im = grey_to_binary(im)
+    im = clear_paper_noise(im, 5)
+    # im.show()
     # templates = load_templates(os.path.join('trainer', 'templates'))
 
     model = load_model_nn()
